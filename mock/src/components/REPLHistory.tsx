@@ -1,16 +1,27 @@
 import "../styles/main.css";
+import { BriefSingleHistory } from "./BriefSingleHistory";
+import { VerboseSingleHistory } from "./VerboseSingleHistory";
 
 interface REPLHistoryProps {
-  history: string[];
+  history: [string, string[][]][];
+  isBrief: boolean;
 }
 export function REPLHistory(props: REPLHistoryProps) {
-  return (
-    <div className="repl-history">
-      {/* This is where command history will go */}
-      {/* TODO: To go through all the pushed commands... try the .map() function! */}
-      {props.history.map((command) => (
-        <div>{command}</div>
-      ))}
-    </div>
-  );
+  if (props.isBrief) {
+    return (
+      <div className="repl-history">
+        {props.history.map(([command, output]) => (
+          <BriefSingleHistory history={[command, output]} />
+        ))}
+      </div>
+    );
+  } else {
+    return (
+      <div className="repl-history">
+        {props.history.map(([command, output]) => (
+          <VerboseSingleHistory history={[command, output]} />
+        ))}
+      </div>
+    );
+  }
 }
