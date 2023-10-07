@@ -1,14 +1,18 @@
 import "../styles/main.css";
 import { Dispatch, SetStateAction, useState } from "react";
 import { ControlledInput } from "./ControlledInput";
+import { path_to_data } from "../data/mockedJson";
+
 
 interface REPLInputProps {
   history: [string, string[][]][];
   setHistory: Dispatch<SetStateAction<[string, string[][]][]>>;
   isBrief: boolean;
   setMode: Dispatch<SetStateAction<boolean>>;
-  loadedCSV: string;
-  setLoadedCSV: Dispatch<SetStateAction<string>>;
+  loadedCSVMessage: string;
+  setLoadedCSVMessage: Dispatch<SetStateAction<string>>;
+  currCSV: string[][];
+  setCurrCSV: Dispatch<SetStateAction<string[][]>>;
 }
 export function REPLInput(props: REPLInputProps) {
   const [commandString, setCommandString] = useState<string>("");
@@ -28,22 +32,43 @@ export function REPLInput(props: REPLInputProps) {
         output = "Mode was set to brief";
       }
       props.setHistory([[commandString, [[output]]], ...props.history]);
-    } else if (commandString.startsWith("load", 0)) {
-      const path = commandString.substring(5);
-      props.setLoadedCSV(path);
-      output = "Load " + path;
+    } else if (commandString.startsWith("load_file", 0)) {
+      handleLoadFile(commandString);
+    } else if (commandString === "view") {
+      output = "View " + props.loadedCSVMessage;
       props.setHistory([[commandString, [[output]]], ...props.history]);
-    } else if (commandString == "view") {
-      output = "View " + props.loadedCSV;
+    } else if (commandString === "search") {
+      output = "Search " + props.loadedCSVMessage;
       props.setHistory([[commandString, [[output]]], ...props.history]);
-    } else if (commandString == "search") {
-      output = "Search " + props.loadedCSV;
-      props.setHistory([[commandString, [[output]]], ...props.history]);
-    } else {
+    } else if (commandString.length !== 0) {
       output = "Invalid command";
+      props.setHistory([[commandString, [[output]]], ...props.history])
     }
-    //props.setHistory([[commandString, [[output]]], ...props.history]);
+    //don't have props.setHistory here bc we want nothing to happen if we submit with empty input
     setCommandString("");
+  }
+
+
+
+
+  function handleLoadFile(commandString: string) {
+    var output = "";
+    const path = commandString.substring(10);
+    const csv = path_to_data.get(path);
+    if (csv) {
+      props.setLoadedCSVMessage(path);
+      output = "load_file " + path;
+      props.setHistory([[commandString, [[output]]], ...props.history]);
+      props.setCurrCSV(csv);
+      console.log("success i think load_file")
+    } 
+    
+    else {
+     output = "Path to file does not exist!";
+     props.setHistory([[commandString, [[output]]], ...props.history]); 
+    }
+
+
   }
 
   return (

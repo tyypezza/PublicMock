@@ -8,10 +8,35 @@ export function VerboseSingleHistory(props: VerboseSingleHistoryProps) {
   const command: string = props.history[0];
   const output: string[][] = props.history[1];
   if (command == "mode") {
-    return <div>{"Command: " + command + ", Output: " + output[0][0]}</div>;
+    return (
+      <div>
+        <br></br>
+        {"Command: " + command}
+        <br></br>
+        {"Output: " + output[0][0]}
+        <br></br>
+      </div>
+    );
   }
   if (command.startsWith("load", 0)) {
-    return <div>{"Command: " + command + ", Output: " + output[0][0]}</div>;
+    return (
+      <div>
+        <br></br>
+        {"Command: " + command}
+        <br></br>
+        {"Output: " + output[0][0]}
+        <br></br>
+      </div>
+    );
   }
-  return <div>{"Command: " + command + ", Output: " + output}</div>;
+  return(
+    <div>
+      <br></br>
+      {"Command: " + command}
+      <br></br>
+      {"Output: " + output}
+      <br></br>
+    </div>
+    
+  ); 
 }

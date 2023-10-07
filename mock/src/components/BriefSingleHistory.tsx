@@ -13,5 +13,6 @@ export function BriefSingleHistory(props: BriefSingleHistoryProps) {
   if (command.startsWith("load", 0)) {
     return <div>{output[0][0]}</div>;
   }
-  return <div>{output}</div>;
+
+  return <div>{output[0][0]}</div>;
 }

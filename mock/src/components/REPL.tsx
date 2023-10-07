@@ -7,11 +7,13 @@ import { REPLInput } from "./REPLInput";
 export default function REPL() {
   const [history, setHistory] = useState<[string, string[][]][]>([]);
   const [isBrief, setMode] = useState<boolean>(true);
-  const [loadedCSV, setLoadedCSV] = useState<string>("No CSV Loaded");
+  const [loadedCSVMessage, setLoadedCSVMessage] = useState<string>("No CSV Loaded");
+  const [currCSV, setCurrCSV] = useState<string[][]>([]);
+
 
   return (
     <div className="repl">
-      <REPLHeader loadedCSV={loadedCSV} isBrief={isBrief} />
+      <REPLHeader loadedCSV={loadedCSVMessage} isBrief={isBrief} />
       <br></br>
       <REPLHistory history={history} isBrief={isBrief} />
       <hr></hr>
@@ -20,8 +22,10 @@ export default function REPL() {
         setHistory={setHistory}
         isBrief={isBrief}
         setMode={setMode}
-        loadedCSV={loadedCSV}
-        setLoadedCSV={setLoadedCSV}
+        loadedCSVMessage={loadedCSVMessage}
+        setLoadedCSVMessage={setLoadedCSVMessage}
+        currCSV = {currCSV}
+        setCurrCSV = {setCurrCSV}
       />
     </div>
   );
