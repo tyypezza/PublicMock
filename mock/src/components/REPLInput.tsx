@@ -7,6 +7,7 @@ interface REPLInputProps {
   setHistory: Dispatch<SetStateAction<[string, string[][]][]>>;
   isBrief: boolean;
   setMode: Dispatch<SetStateAction<boolean>>;
+  setLoadedCSV: Dispatch<SetStateAction<string>>;
 }
 export function REPLInput(props: REPLInputProps) {
   const [commandString, setCommandString] = useState<string>("");
@@ -26,7 +27,9 @@ export function REPLInput(props: REPLInputProps) {
         output = "Mode was set to brief";
       }
     } else if (commandString.startsWith("load", 0)) {
-      output = "Load csv";
+      const path = commandString.substring(5);
+      props.setLoadedCSV(path);
+      output = "Load " + path;
     } else if (commandString == "view") {
       output = "View csv";
     } else if (commandString == "search") {

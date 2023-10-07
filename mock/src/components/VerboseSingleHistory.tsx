@@ -11,7 +11,7 @@ export function VerboseSingleHistory(props: VerboseSingleHistoryProps) {
     return <div>{"Output: " + output[0][0]}</div>;
   }
   if (command.startsWith("load", 0)) {
-    return <div>"Output: " + {output[0][0]}</div>;
+    return <div>{"Output: " + output[0][0]}</div>;
   }
   return <div>{output}</div>;
 }

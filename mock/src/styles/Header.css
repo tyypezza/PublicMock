@@ -1,0 +1,9 @@
+.Header {
+  text-align: center;
+}
+
+.Header-Table {
+  table-layout: fixed;
+  width: 100%;
+  background-color: lightgray;
+}
