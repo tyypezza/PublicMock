@@ -12,6 +12,7 @@ export default function REPL() {
   return (
     <div className="repl">
       <REPLHeader loadedCSV={loadedCSV} isBrief={isBrief} />
+      <br></br>
       <REPLHistory history={history} isBrief={isBrief} />
       <hr></hr>
       <REPLInput
@@ -19,6 +20,7 @@ export default function REPL() {
         setHistory={setHistory}
         isBrief={isBrief}
         setMode={setMode}
+        loadedCSV={loadedCSV}
         setLoadedCSV={setLoadedCSV}
       />
     </div>

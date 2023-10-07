@@ -7,6 +7,7 @@ interface REPLInputProps {
   setHistory: Dispatch<SetStateAction<[string, string[][]][]>>;
   isBrief: boolean;
   setMode: Dispatch<SetStateAction<boolean>>;
+  loadedCSV: string;
   setLoadedCSV: Dispatch<SetStateAction<string>>;
 }
 export function REPLInput(props: REPLInputProps) {
@@ -26,18 +27,22 @@ export function REPLInput(props: REPLInputProps) {
         props.setMode(true);
         output = "Mode was set to brief";
       }
+      props.setHistory([[commandString, [[output]]], ...props.history]);
     } else if (commandString.startsWith("load", 0)) {
       const path = commandString.substring(5);
       props.setLoadedCSV(path);
       output = "Load " + path;
+      props.setHistory([[commandString, [[output]]], ...props.history]);
     } else if (commandString == "view") {
-      output = "View csv";
+      output = "View " + props.loadedCSV;
+      props.setHistory([[commandString, [[output]]], ...props.history]);
     } else if (commandString == "search") {
-      output = "Search csv";
+      output = "Search " + props.loadedCSV;
+      props.setHistory([[commandString, [[output]]], ...props.history]);
     } else {
       output = "Invalid command";
     }
-    props.setHistory([[commandString, [[output]]], ...props.history]);
+    //props.setHistory([[commandString, [[output]]], ...props.history]);
     setCommandString("");
   }
 

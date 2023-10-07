@@ -21,7 +21,7 @@ export function REPLHeader(props: REPLHeader) {
           </td>
           <td>
             <p className="REPL-header">
-              <b>Loaded CSV:</b> {props.loadedCSV}
+              <b>Loaded CSV:</b> {props.loadedCSV.substring(0, 20)}
             </p>
           </td>
         </tr>
