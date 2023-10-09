@@ -29,3 +29,13 @@ button {
   margin: auto;
   display: block;
 }
+
+.Output-Table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.Output-Datum {
+  background-color: #96d4d4;
+  border: 1px solid black;
+}

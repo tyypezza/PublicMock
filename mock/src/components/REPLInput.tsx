@@ -3,7 +3,6 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { ControlledInput } from "./ControlledInput";
 import { path_to_data } from "../data/mockedJson";
 
-
 interface REPLInputProps {
   history: [string, string[][]][];
   setHistory: Dispatch<SetStateAction<[string, string[][]][]>>;
@@ -32,24 +31,20 @@ export function REPLInput(props: REPLInputProps) {
         output = "Mode was set to brief";
       }
       props.setHistory([[commandString, [[output]]], ...props.history]);
-    } else if (commandString.startsWith("load_file", 0)) {
+    } else if (commandString.startsWith("load_file ", 0)) {
       handleLoadFile(commandString);
-    } else if (commandString === "view") {
-      output = "View " + props.loadedCSVMessage;
-      props.setHistory([[commandString, [[output]]], ...props.history]);
-    } else if (commandString === "search") {
+    } else if (commandString == "view") {
+      handleViewFile(commandString);
+    } else if (commandString == "search") {
       output = "Search " + props.loadedCSVMessage;
       props.setHistory([[commandString, [[output]]], ...props.history]);
     } else if (commandString.length !== 0) {
       output = "Invalid command";
-      props.setHistory([[commandString, [[output]]], ...props.history])
+      props.setHistory([[commandString, [[output]]], ...props.history]);
     }
     //don't have props.setHistory here bc we want nothing to happen if we submit with empty input
     setCommandString("");
   }
-
-
-
 
   function handleLoadFile(commandString: string) {
     var output = "";
@@ -60,15 +55,24 @@ export function REPLInput(props: REPLInputProps) {
       output = "load_file " + path;
       props.setHistory([[commandString, [[output]]], ...props.history]);
       props.setCurrCSV(csv);
-      console.log("success i think load_file")
-    } 
-    
-    else {
-     output = "Path to file does not exist!";
-     props.setHistory([[commandString, [[output]]], ...props.history]); 
+      console.log("success i think load_file");
+    } else {
+      output = "Path to file does not exist!";
+      props.setHistory([[commandString, [[output]]], ...props.history]);
     }
+  }
 
-
+  function handleViewFile(commandString: string) {
+    if (props.loadedCSVMessage == "No CSV Loaded") {
+      let output = "Currently there is no CVS loaded.";
+      //first and easiest I could think of to let single history classes know if a csv is loaded
+      props.setHistory([
+        [commandString + "none", [[output]]],
+        ...props.history,
+      ]);
+    } else {
+      props.setHistory([[commandString, props.currCSV], ...props.history]);
+    }
   }
 
   return (
