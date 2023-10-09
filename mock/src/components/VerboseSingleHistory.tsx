@@ -1,4 +1,5 @@
 import "../styles/main.css";
+import { ViewTable } from "./ViewTable";
 
 export interface VerboseSingleHistoryProps {
   history: [string, string[][]];
@@ -10,33 +11,52 @@ export function VerboseSingleHistory(props: VerboseSingleHistoryProps) {
   if (command == "mode") {
     return (
       <div>
-        <br></br>
         {"Command: " + command}
         <br></br>
         {"Output: " + output[0][0]}
-        <br></br>
+        <hr></hr>
       </div>
     );
   }
   if (command.startsWith("load", 0)) {
     return (
       <div>
-        <br></br>
         {"Command: " + command}
         <br></br>
         {"Output: " + output[0][0]}
-        <br></br>
+        <hr></hr>
       </div>
     );
   }
-  return(
+  if (command.startsWith("view", 0)) {
+    if (command == "viewnone") {
+      return (
+        <div>
+          {"Command: view"}
+          <br></br>
+          {"Output: " + output[0][0]}
+          <hr></hr>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          {"Command: " + command}
+          <br></br>
+          {"Output: "}
+          <br></br>
+          <ViewTable history={props.history} />
+          <hr></hr>
+        </div>
+      );
+    }
+  }
+  return (
     <div>
-      <br></br>
       {"Command: " + command}
       <br></br>
       {"Output: " + output}
-      <br></br>
+      <hr></hr>
     </div>
-    
-  ); 
+  );
 }
