@@ -1,7 +1,8 @@
 import "../styles/main.css";
 import { Dispatch, SetStateAction, useState } from "react";
 import { ControlledInput } from "./ControlledInput";
-import { path_to_data } from "../data/mockedJson";
+import { path_to_data, search } from "../data/mockedJson";
+import { emit } from "process";
 
 interface REPLInputProps {
   history: [string, string[][]][];
@@ -35,9 +36,8 @@ export function REPLInput(props: REPLInputProps) {
       handleLoadFile(commandString);
     } else if (commandString == "view") {
       handleViewFile(commandString);
-    } else if (commandString == "search") {
-      output = "Search " + props.loadedCSVMessage;
-      props.setHistory([[commandString, [[output]]], ...props.history]);
+    } else if (commandString.startsWith("search ", 0)) {
+      handleSearchFile(commandString);
     } else if (commandString.length !== 0) {
       output = "Invalid command";
       props.setHistory([[commandString, [[output]]], ...props.history]);
@@ -73,6 +73,84 @@ export function REPLInput(props: REPLInputProps) {
     } else {
       props.setHistory([[commandString, props.currCSV], ...props.history]);
     }
+  }
+
+  function handleSearchFile(commandString: string) {
+    if (props.loadedCSVMessage == "No CSV Loaded") {
+      let output = "Currently there is no CVS loaded.";
+      //first and easiest I could think of to let single history classes know if a csv is loaded
+      props.setHistory([["search none", [[output]]], ...props.history]);
+    } else {
+      var searchParams: string[] = [];
+      try {
+        searchParams = parseSearchInput(commandString.substring(7));
+      } catch (error) {
+        searchParams = [];
+      }
+      if (searchParams.length == 0 || searchParams.length > 2) {
+        let output = "Search must follow the input instructions.";
+        props.setHistory([["search wrong", [[output]]], ...props.history]);
+      } else {
+        console.log(searchParams);
+        var rowsFound: string[][] = [[searchParams[0]]];
+        if (searchParams.length == 1) {
+          let term = searchParams[0];
+          rowsFound = search("", term);
+        } else {
+          let column = searchParams[0];
+          let term = searchParams[1];
+          rowsFound = search(column, term);
+        }
+        props.setHistory([[commandString, rowsFound], ...props.history]);
+      }
+    }
+  }
+
+  /**
+   *
+   * @param searchParams String of user input after search
+   * @returns returns a list of strings of the params. if any structure error,
+   *          throw error
+   */
+
+  function parseSearchInput(searchParams: string) {
+    let termArray: string[] = [];
+    var isOpen = false;
+    let chars = searchParams.split("");
+    var index = 0;
+    chars.map((c) => {
+      if (c == "<") {
+        if (!isOpen) {
+          isOpen = true;
+          termArray = [...termArray, ""];
+        } else {
+          //second open arrow
+          throw Error;
+        }
+      } else if (c == ">") {
+        if (isOpen) {
+          isOpen = false;
+          index++;
+        } else {
+          //second close arrow
+          throw Error;
+        }
+      } else {
+        if (isOpen == true) {
+          termArray[index] = termArray[index].concat(c);
+        } else {
+          //characters not in arrows
+          if (!(c == " ")) {
+            throw Error;
+          }
+        }
+      }
+    });
+    if (isOpen) {
+      //never closed last arrow
+      throw Error;
+    }
+    return termArray;
   }
 
   return (

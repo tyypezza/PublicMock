@@ -38,6 +38,20 @@ export function BriefSingleHistory(props: BriefSingleHistoryProps) {
     }
   }
 
+  if (command.startsWith("search ", 0)) {
+    //first and easiest I could think of to let single history classes know if a csv is loaded
+    if (command == "search none" || command == "search wrong") {
+      return (
+        <div>
+          {output[0][0]}
+          <hr></hr>
+        </div>
+      );
+    } else {
+      return <ViewTable history={props.history} />;
+    }
+  }
+
   return (
     <div>
       {output}
