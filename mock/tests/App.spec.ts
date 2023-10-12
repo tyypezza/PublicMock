@@ -104,6 +104,9 @@ test.beforeEach(async ({ page }) => {
 
 
 
+/**
+ * this tests that the initial components are set up, exist and are visible
+ */
 test("components exist and set up", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");
@@ -115,6 +118,10 @@ test("components exist and set up", async ({ page }) => {
   await expect(page.getByText("Mode: Brief")).toBeVisible();
 });
 
+/**
+ * this tests an invalid command being submited to the app
+ * expecte result would be an Invalid Command response
+ */
 test("invalid command", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");
@@ -129,6 +136,11 @@ test("invalid command", async ({ page }) => {
   expect(await resHistory.count()).toBe(1);
 });
 
+
+/**
+ * this tests that pressing the submit button while the input box is empty
+ * does not change anything about the webpage. 
+ */
 test("empty input submit nothing changes", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");

@@ -5,6 +5,12 @@ interface REPLHeader {
   isBrief: boolean;
 }
 
+/**
+ * This is the ReplHeader function that returns the table with the information on node / 
+ * loaded CSV
+ * @param props 
+ * @returns actual header div / table
+ */
 export function REPLHeader(props: REPLHeader) {
   var mode = "Brief";
   if (!props.isBrief) {

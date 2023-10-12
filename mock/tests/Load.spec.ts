@@ -1,5 +1,8 @@
 import { test, expect } from "@playwright/test";
 
+/**
+ * this class tests the load_file functionality and edge cases
+ */
 
 let submitButton;
 let inputBox;
@@ -10,18 +13,38 @@ test.beforeEach(async ({ page }) => {
   submitButton = page.locator("css=button");
 });
 
-test("no path load", async ({ page }) => {
+/**
+ * this tests for a file that does not exist , and that a proper error response
+ * is given. 
+ */
+test("bad path load", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");
-
-  // Assert that the button is visible by checking for its label or text
-
   await inputBox.fill("load_file badpath");
   await submitButton.click();
 
   await expect(page.getByText("Path to file does not exist!")).toBeVisible();
 });
 
+/**
+ * this tests for just calling load (with no params), and that a proper error response is given 
+ * is given. 
+ */
+test("no path load", async ({ page }) => {
+  // Navigate to your webpage
+  await page.goto("http://localhost:8000/");
+  await inputBox.fill("load_file badpath");
+  await submitButton.click();
+
+  await expect(page.getByText("Path to file does not exist!")).toBeVisible();
+});
+
+
+/**
+ * this tests a properly loaded csv (csv1) and provides a proper output response
+ * "Successfully loaded csv1"
+ * and ensuring the header also updates and confirms that there is a loaded csv
+ */
 test("csv1: successfully load", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");
@@ -36,6 +59,11 @@ test("csv1: successfully load", async ({ page }) => {
 });
 
 
+/**
+ * this tests a properly loaded csv (csv2) and provides a proper output response
+ * "Successfully loaded csv2"
+ * and ensuring the header also updates and confirms that there is a loaded csv
+ */
 test("csv2: successfully load", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");
@@ -50,6 +78,11 @@ test("csv2: successfully load", async ({ page }) => {
 });
 
 
+/**
+ * this tests a properly loaded csv (csv2) and provides a proper output response
+ * "Successfully loaded csv2"
+ * and ensuring the header also updates and confirms that there is a loaded csv
+ */
 test("csv3: successfully load", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");

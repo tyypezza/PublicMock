@@ -4,6 +4,13 @@ import { REPLHeader } from "./REPLHeader";
 import { REPLHistory } from "./REPLHistory";
 import { REPLInput } from "./REPLInput";
 
+/**
+ * This is the main component that contains the header, history, and input. 
+ * Additionally, it holds all the props and state changers that are passed as inputs into the proper
+ * components. 
+ * 
+ * @returns the actual repl components, with the header, history, and input. 
+ */
 export default function REPL() {
   const [history, setHistory] = useState<[string, string[][]][]>([]);
   const [isBrief, setMode] = useState<boolean>(true);

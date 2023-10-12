@@ -1,10 +1,7 @@
-// export interface CSVRow {
-//     State: string;
-//     DataType: string;
-//     AvgWeeklyEarnings: string;
-//     NumWorkers: string;
-//     EarningsDisparaity: string;
-// }
+/**
+ * this is mocked data as 2d array from the previous sprints
+ *
+ */
 
 const mockCSVData1: string[][] = [
   [
@@ -562,7 +559,7 @@ const mockCSVData3: string[][] = [
 
 
 
-
+//this is the return map that holds the paths (strings) to the 2d arrays of data
 export const path_to_data: Map<string, string[][]> = new Map<
   string,
   string[][]
@@ -571,17 +568,5 @@ export const path_to_data: Map<string, string[][]> = new Map<
 path_to_data.set("csv1", mockCSVData1);
 path_to_data.set("csv2", mockCSVData2);
 path_to_data.set("csv3", mockCSVData3);
+//3 mocked up paths: csv1, csv2, csv3
 
-// export function search(column: string | number, term: string ) {
-//   var rowsFound: string[][] = [];
-//   if (typeof(column) === "string") {
-//     if (column === "Data Type" && term === "Multiracial") {
-//         rowsFound = [mockCSVData1[6]]
-//     }
-//   } else if (typeof(column) === "number") {
-//     if (column === 1 && term === "Multiracial" ) {
-//         rowsFound = [mockCSVData1[6]]
-//     }
-//   }
-//   return rowsFound;
-// }

@@ -1,6 +1,10 @@
 import "../styles/App.css";
 import REPL from "./REPL";
 
+/**
+ * This is the top level app class that creates the repl
+ * @returns 
+ */
 function App() {
   return (
     <div className="App">

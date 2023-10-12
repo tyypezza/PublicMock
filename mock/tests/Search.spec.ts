@@ -1,27 +1,27 @@
 import { test, expect } from "@playwright/test";
 
+
+
 /**
-  The general shapes of tests in Playwright Test are:
-    1. Navigate to a URL
-    2. Interact with the page
-    3. Assert something about the page against your expectations
-  Look for this pattern in the tests below!
+ * this class tests the searching functionality, error messages, and successes
  */
+
 let submitButton;
 let inputBox;
-// If you needed to do something before every test case...
+
 test.beforeEach(async ({ page }) => {
-  // ... you'd put it here.
-  // await page.goto('http://localhost:8000/')
-  // TODO: Is there something we need to do before every test case to avoid repeating code?
   await page.goto("http://localhost:8000/");
   inputBox = page.locator("css=input");
   submitButton = page.locator("css=button");
 });
 
 
+/**
+ * this tests that calling search without a CSV loaded will return a proper
+ * error response message. 
+ */
 test("no csv searching", async ({ page }) => {
-  // Navigate to your webpage
+
   await page.goto("http://localhost:8000/");
 
   await inputBox.fill("search <1> <2>");
@@ -32,11 +32,13 @@ test("no csv searching", async ({ page }) => {
   ).toBeVisible();
 });
 
+/**
+ * this tests for searching a value that does not exist will return a proper 
+ * message - "No Results Found!"
+ */
 test("no results found search", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");
-
-  // Assert that the button is visible by checking for its label or text
 
   await inputBox.fill("load_file csv1");
   await submitButton.click();
@@ -47,11 +49,14 @@ test("no results found search", async ({ page }) => {
   await expect(page.getByText("No Results Found!")).toBeVisible();
 });
 
-test("ill-formatted search no carrots", async ({ page }) => {
-  // Navigate to your webpage
-  await page.goto("http://localhost:8000/");
 
-  // Assert that the button is visible by checking for its label or text
+/**
+ * this tests an ill-formatted search. In this example, it tests that the 
+ * carrots are not used for searching. 
+ */
+test("ill-formatted search no carrots", async ({ page }) => {
+
+  await page.goto("http://localhost:8000/");
 
   await inputBox.fill("load_file csv1");
   await submitButton.click();
@@ -66,11 +71,13 @@ test("ill-formatted search no carrots", async ({ page }) => {
   ).toBeVisible();
 });
 
+/**
+ * this tests an ill-formatted search (with only one parameter)
+ * and that it returns a proper error message
+ */
 test("ill-formatted search only one param", async ({ page }) => {
-  // Navigate to your webpage
-  await page.goto("http://localhost:8000/");
 
-  // Assert that the button is visible by checking for its label or text
+  await page.goto("http://localhost:8000/");
 
   await inputBox.fill("load_file csv1");
   await submitButton.click();
@@ -85,16 +92,18 @@ test("ill-formatted search only one param", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("ill-formatted search", async ({ page }) => {
-  // Navigate to your webpage
-  await page.goto("http://localhost:8000/");
+/**
+ * this tests an ill-formatted search with no parameters
+ * and that it returns a proper error message
+ */
+test("ill-formatted search no params", async ({ page }) => {
 
-  // Assert that the button is visible by checking for its label or text
+  await page.goto("http://localhost:8000/");
 
   await inputBox.fill("load_file csv1");
   await submitButton.click();
 
-  await inputBox.fill("search 123 345");
+  await inputBox.fill("search");
   await submitButton.click();
 
   await expect(
@@ -104,11 +113,14 @@ test("ill-formatted search", async ({ page }) => {
   ).toBeVisible();
 });
 
+/**
+ * This tests a successful search, with using a number as the column identifier, 
+ *  with only one row as a response, and that
+ * a proper table is returned, with the search value existing in the response 
+ */
 test("csv1: successful 1 row search columnIndex ", async ({ page }) => {
-  // Navigate to your webpage
-  await page.goto("http://localhost:8000/");
 
-  // Assert that the button is visible by checking for its label or text
+  await page.goto("http://localhost:8000/");
 
   await inputBox.fill("load_file csv1");
   await submitButton.click();
@@ -121,11 +133,13 @@ test("csv1: successful 1 row search columnIndex ", async ({ page }) => {
   await expect(resTable.locator("td").nth(1)).toHaveText("Multiracial");
 });
 
+/**
+ * this tests a successful search with using a string as the column name, 
+ * with only one row as a response (csv1)
+ */
 test("csv1: successful 1 row search columnName ", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");
-
-  // Assert that the button is visible by checking for its label or text
 
   await inputBox.fill("load_file csv1");
   await submitButton.click();
@@ -138,11 +152,12 @@ test("csv1: successful 1 row search columnName ", async ({ page }) => {
   await expect(resTable.locator("td").nth(1)).toHaveText("Multiracial");
 });
 
+/**
+ * this tests a successful search with using a number as the column index, 
+ * with only two rows as a response (csv3)
+ */
 test("csv3: successful 2 row search columnIndex ", async ({ page }) => {
-  // Navigate to your webpage
   await page.goto("http://localhost:8000/");
-
-  // Assert that the button is visible by checking for its label or text
 
   await inputBox.fill("load_file csv3");
   await submitButton.click();
@@ -156,11 +171,12 @@ test("csv3: successful 2 row search columnIndex ", async ({ page }) => {
   await expect(resTable.nth(1).locator("td").nth(0)).toHaveText("Asian");
 });
 
+/**
+ * this tests a successful search with using a string as the column name, 
+ * with two rows as a response (csv3)
+ */
 test("csv3: successful 2 row search columnName ", async ({ page }) => {
-  // Navigate to your webpage
   await page.goto("http://localhost:8000/");
-
-  // Assert that the button is visible by checking for its label or text
 
   await inputBox.fill("load_file csv3");
   await submitButton.click();
@@ -174,6 +190,11 @@ test("csv3: successful 2 row search columnName ", async ({ page }) => {
   await expect(resTable.nth(1).locator("td").nth(0)).toHaveText("Asian");
 });
 
+
+/**
+ * this tests successful search with using number as column index
+ * with 5 rows as a response
+ */
 test("csv2: successful 5 row search columnIndex ", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");
@@ -195,11 +216,12 @@ test("csv2: successful 5 row search columnIndex ", async ({ page }) => {
   await expect(resTable.nth(4).locator("td").nth(0)).toHaveText("0");
 });
 
+/**
+ * this tests successful search with using string as column name
+ * with 5 rows as a response
+ */
 test("csv2: successful 5 row search columnName ", async ({ page }) => {
-  // Navigate to your webpage
   await page.goto("http://localhost:8000/");
-
-  // Assert that the button is visible by checking for its label or text
 
   await inputBox.fill("load_file csv2");
   await submitButton.click();

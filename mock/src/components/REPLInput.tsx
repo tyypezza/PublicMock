@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { ControlledInput } from "./ControlledInput";
 // import { path_to_data, search } from "../data/mockedJson";
 import { path_to_data } from "../data/mockedJson";
-import { emit } from "process";
+
 
 interface REPLInputProps {
   history: [string, string[][]][];
@@ -15,13 +15,22 @@ interface REPLInputProps {
   currCSV: string[][];
   setCurrCSV: Dispatch<SetStateAction<string[][]>>;
 }
+
+/**
+ * this is the REPLInput function that returns that actual input components with
+ * functionality
+ * 
+ * @param props 
+ * @returns 
+ */
 export function REPLInput(props: REPLInputProps) {
   const [commandString, setCommandString] = useState<string>("");
+  
   /**
-   * We suggest breaking down this component into smaller components, think about the individual pieces
-   * of the REPL and how they connect to each other...
+   * this function handles when the submit button is pressed. and parses the command
+   * for whether or not it's load, search, etc. 
+   * @param commandString 
    */
-
   function handleSubmit(commandString: string) {
     var output = "";
     if (commandString == "mode") {
@@ -33,11 +42,11 @@ export function REPLInput(props: REPLInputProps) {
         output = "Mode was set to brief";
       }
       props.setHistory([[commandString, [[output]]], ...props.history]);
-    } else if (commandString.startsWith("load_file ", 0)) {
+    } else if (commandString.startsWith("load_file", 0)) {
       handleLoadFile(commandString);
     } else if (commandString == "view") {
       handleViewFile(commandString);
-    } else if (commandString.startsWith("search ", 0)) {
+    } else if (commandString.startsWith("search", 0)) {
       handleSearchFile(commandString);
     } else if (commandString.length !== 0) {
       output = "Invalid command";
@@ -47,17 +56,23 @@ export function REPLInput(props: REPLInputProps) {
     setCommandString("");
   }
 
+  /**
+   * this function handles loading the file command, prints the proper messages
+   * and stores the 2d array in the backend. 
+   * @param commandString 
+   */
   function handleLoadFile(commandString: string) {
     var output = "";
     const path = commandString.substring(10);
     const csv = path_to_data.get(path);
     if (csv) {
+      // this line checks if the csv exists and if so add it
       props.setLoadedCSVMessage(path);
       output = "Successfully loaded " + path;
-
       props.setHistory([[commandString, [[output]]], ...props.history]);
       props.setCurrCSV(csv);
     } else {
+      // if the csv does not exist, return error message
       output = "Path to file does not exist!";
       props.setHistory([[commandString, [[output]]], ...props.history]);
     }
@@ -76,6 +91,12 @@ export function REPLInput(props: REPLInputProps) {
     }
   }
 
+
+  /**
+   * this handles the searching functionality if the command starts with "search"
+   * and adds the rows found. 
+   * @param commandString 
+   */
   function handleSearchFile(commandString: string) {
     if (props.loadedCSVMessage == "No CSV Loaded") {
       let output = "Currently there is no CSV loaded.";
@@ -94,20 +115,7 @@ export function REPLInput(props: REPLInputProps) {
       } else {
 
         var rowsFound: string[][] = [[searchParams[0]]];
-        // if (searchParams.length == 1) {
-        //   let term = searchParams[0];
-        //   rowsFound = searchAll(term);
-        // } else {
-        //   let column = searchParams[0];
-        //   let term = searchParams[1];
-        //   rowsFound = searchColumnName(column, term);
-        // }
-        /**
-         * i don't think we need to account for searching through all rows; just when having two params, column and value
-         * also not accounting for headers, since they say nothing about it; for this one saying that we assume there are headers
-         * and all this stuff can be taken account for in the backend
-         */
-        // let column = Number(searchParams[0])
+        
         let column = searchParams[0]
         let term = searchParams[1]
 
@@ -118,6 +126,7 @@ export function REPLInput(props: REPLInputProps) {
           rowsFound = search(column, term)
         }
 
+        // if nothing is found, then return a proper error message
         if (rowsFound.length !== 0) {
           props.setHistory([[commandString, rowsFound], ...props.history]);
         } else {
@@ -174,11 +183,20 @@ export function REPLInput(props: REPLInputProps) {
     return termArray;
   }
 
+  /**
+   * this is a mocked search that can handle taking in a column idenfitier
+   * as either a string or a number. 
+   * @param column 
+   * @param term 
+   * @returns 
+   */
   function search(column: string | number, term: string) {
     var rowsFound: string[][] = [];
     if (typeof(column) === "string") {
-      // actually implement the searching here - this is just a mock placeholder
+      // type checking but this was also used in the livecode, since either a string or number
+      // can be taken in 
 
+      // the following if statements are mocked searches
       if (column === "Data Type" && term === "Multiracial" && props.loadedCSVMessage === "csv1") {
         rowsFound = [props.currCSV[6]];
       }
@@ -197,17 +215,23 @@ export function REPLInput(props: REPLInputProps) {
         ];
       }
 
-
-
-
-
     } else if (typeof(column) === "number") {
-      //actually implment the searching here - this is just a mock placeholder
+      // type checking but this was also used in the livecode, since either a string or number
+      // can be taken in
 
-      if (column === 1 && term === "Multiracial" && props.loadedCSVMessage === "csv1") {
+      // the following if statements are mocked searches
+      if (
+        column === 1 &&
+        term === "Multiracial" &&
+        props.loadedCSVMessage === "csv1"
+      ) {
         rowsFound = [props.currCSV[6]];
       }
-      if (column === 0 && term === "Asian" && props.loadedCSVMessage === "csv3") {
+      if (
+        column === 0 &&
+        term === "Asian" &&
+        props.loadedCSVMessage === "csv3"
+      ) {
         rowsFound = [props.currCSV[1], props.currCSV[9]];
       }
 
@@ -217,7 +241,7 @@ export function REPLInput(props: REPLInputProps) {
           props.currCSV[2],
           props.currCSV[3],
           props.currCSV[4],
-          props.currCSV[5]
+          props.currCSV[5],
         ];
       }
     }
@@ -227,6 +251,7 @@ export function REPLInput(props: REPLInputProps) {
 
 
   return (
+    //actually returning the input html dev thing
     <div className="repl-input">
       <fieldset>
         <legend>Enter a command:</legend>
