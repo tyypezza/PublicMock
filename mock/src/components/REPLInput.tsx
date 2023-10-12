@@ -1,7 +1,8 @@
 import "../styles/main.css";
 import { Dispatch, SetStateAction, useState } from "react";
 import { ControlledInput } from "./ControlledInput";
-import { path_to_data, search } from "../data/mockedJson";
+// import { path_to_data, search } from "../data/mockedJson";
+import { path_to_data } from "../data/mockedJson";
 import { emit } from "process";
 
 interface REPLInputProps {
@@ -52,10 +53,10 @@ export function REPLInput(props: REPLInputProps) {
     const csv = path_to_data.get(path);
     if (csv) {
       props.setLoadedCSVMessage(path);
-      output = "load_file " + path;
+      output = "Successfully loaded " + path;
+
       props.setHistory([[commandString, [[output]]], ...props.history]);
       props.setCurrCSV(csv);
-      console.log("success i think load_file");
     } else {
       output = "Path to file does not exist!";
       props.setHistory([[commandString, [[output]]], ...props.history]);
@@ -64,7 +65,7 @@ export function REPLInput(props: REPLInputProps) {
 
   function handleViewFile(commandString: string) {
     if (props.loadedCSVMessage == "No CSV Loaded") {
-      let output = "Currently there is no CVS loaded.";
+      let output = "Currently there is no CSV loaded.";
       //first and easiest I could think of to let single history classes know if a csv is loaded
       props.setHistory([
         [commandString + "none", [[output]]],
@@ -77,9 +78,9 @@ export function REPLInput(props: REPLInputProps) {
 
   function handleSearchFile(commandString: string) {
     if (props.loadedCSVMessage == "No CSV Loaded") {
-      let output = "Currently there is no CVS loaded.";
+      let output = "Currently there is no CSV loaded.";
       //first and easiest I could think of to let single history classes know if a csv is loaded
-      props.setHistory([["search none", [[output]]], ...props.history]);
+      props.setHistory([[commandString, [[output]]], ...props.history]);
     } else {
       var searchParams: string[] = [];
       try {
@@ -87,21 +88,41 @@ export function REPLInput(props: REPLInputProps) {
       } catch (error) {
         searchParams = [];
       }
-      if (searchParams.length == 0 || searchParams.length > 2) {
-        let output = "Search must follow the input instructions.";
+      if (searchParams.length !== 2 ) {
+        let output = "Search must follow the input instructions. Format: search <column> <value>";
         props.setHistory([["search wrong", [[output]]], ...props.history]);
       } else {
-        console.log(searchParams);
+
         var rowsFound: string[][] = [[searchParams[0]]];
-        if (searchParams.length == 1) {
-          let term = searchParams[0];
-          rowsFound = search("", term);
+        // if (searchParams.length == 1) {
+        //   let term = searchParams[0];
+        //   rowsFound = searchAll(term);
+        // } else {
+        //   let column = searchParams[0];
+        //   let term = searchParams[1];
+        //   rowsFound = searchColumnName(column, term);
+        // }
+        /**
+         * i don't think we need to account for searching through all rows; just when having two params, column and value
+         * also not accounting for headers, since they say nothing about it; for this one saying that we assume there are headers
+         * and all this stuff can be taken account for in the backend
+         */
+        // let column = Number(searchParams[0])
+        let column = searchParams[0]
+        let term = searchParams[1]
+
+        //this checks if it's an integer or can be parsed as an integer
+        if (!isNaN(parseInt(column))) {
+          rowsFound = search(parseInt(column), term)
         } else {
-          let column = searchParams[0];
-          let term = searchParams[1];
-          rowsFound = search(column, term);
+          rowsFound = search(column, term)
         }
-        props.setHistory([[commandString, rowsFound], ...props.history]);
+
+        if (rowsFound.length !== 0) {
+          props.setHistory([[commandString, rowsFound], ...props.history]);
+        } else {
+          props.setHistory([[commandString, [["No Results Found!"]]], ...props.history]);
+        }
       }
     }
   }
@@ -152,6 +173,58 @@ export function REPLInput(props: REPLInputProps) {
     }
     return termArray;
   }
+
+  function search(column: string | number, term: string) {
+    var rowsFound: string[][] = [];
+    if (typeof(column) === "string") {
+      // actually implement the searching here - this is just a mock placeholder
+
+      if (column === "Data Type" && term === "Multiracial" && props.loadedCSVMessage === "csv1") {
+        rowsFound = [props.currCSV[6]];
+      }
+
+      if (column === "IPEDS" && term === "Asian" && props.loadedCSVMessage === "csv3") {
+        rowsFound = [props.currCSV[1], props.currCSV[9]];
+      }
+
+      if (column === "ID Race" && term === "0" && props.loadedCSVMessage === "csv2") {
+        rowsFound = [
+          props.currCSV[1],
+          props.currCSV[2],
+          props.currCSV[3],
+          props.currCSV[4],
+          props.currCSV[5]
+        ];
+      }
+
+
+
+
+
+    } else if (typeof(column) === "number") {
+      //actually implment the searching here - this is just a mock placeholder
+
+      if (column === 1 && term === "Multiracial" && props.loadedCSVMessage === "csv1") {
+        rowsFound = [props.currCSV[6]];
+      }
+      if (column === 0 && term === "Asian" && props.loadedCSVMessage === "csv3") {
+        rowsFound = [props.currCSV[1], props.currCSV[9]];
+      }
+
+      if (column === 0 && term === "0" && props.loadedCSVMessage === "csv2") {
+        rowsFound = [
+          props.currCSV[1],
+          props.currCSV[2],
+          props.currCSV[3],
+          props.currCSV[4],
+          props.currCSV[5]
+        ];
+      }
+    }
+
+    return rowsFound;
+  }
+
 
   return (
     <div className="repl-input">

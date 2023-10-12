@@ -20,7 +20,7 @@ export function ControlledInput({
 }: ControlledInputProps) {
   return (
     <input
-      type="text"
+      type="input"
       className="repl-command-box"
       value={value}
       placeholder="Enter command here!"
