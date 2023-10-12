@@ -53,7 +53,7 @@ export function BriefSingleHistory(props: BriefSingleHistoryProps) {
   }
 
   return (
-    <div>
+    <div className="single-history-result">
       {output}
       <hr></hr>
     </div>

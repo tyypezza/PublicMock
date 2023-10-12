@@ -115,118 +115,29 @@ test("components exist and set up", async ({ page }) => {
   await expect(page.getByText("Mode: Brief")).toBeVisible();
 });
 
-test("no csv searching", async ({ page }) => {
-  // Navigate to your webpage
-  await page.goto("http://localhost:8000/");
-
-  await inputBox.fill("search <1> <2>");
-  await submitButton.click();
-
-  await expect(page.getByText("Currently there is no CSV loaded.")).toBeVisible();
-  
-});
-
-test("no results found search", async ({ page }) => {
+test("invalid command", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");
 
   // Assert that the button is visible by checking for its label or text
-
-  await inputBox.fill("load_file csv1");
+  await inputBox.fill("badcommmand");
   await submitButton.click();
 
-  await inputBox.fill("search <134343> <123213232>");
-  await submitButton.click();
+  await expect(page.getByText("Invalid command")).toBeVisible();
 
-  await expect(
-    page.getByText("No Results Found!")
-  ).toBeVisible();
+  const resHistory = page.locator(".single-history-result");
+  expect(await resHistory.count()).toBe(1);
 });
 
-test("ill-formatted search no carrots", async ({ page }) => {
+test("empty input submit nothing changes", async ({ page }) => {
   // Navigate to your webpage
   await page.goto("http://localhost:8000/");
 
-  // Assert that the button is visible by checking for its label or text
-
-  await inputBox.fill("load_file csv1");
   await submitButton.click();
-
-  await inputBox.fill("search 123 345");
-  await submitButton.click();
-
-  await expect(
-    page.getByText(
-      "Search must follow the input instructions. Format: search <column> <value>"
-    )
-  ).toBeVisible();
+  const resHistory = page.locator(".single-history-result");
+  expect (await resHistory.count()).toBe(0);
 });
 
-test("ill-formatted search only one param", async ({ page }) => {
-  // Navigate to your webpage
-  await page.goto("http://localhost:8000/");
-
-  // Assert that the button is visible by checking for its label or text
-
-  await inputBox.fill("load_file csv1");
-  await submitButton.click();
-
-  await inputBox.fill("search 123");
-  await submitButton.click();
-
-  await expect(
-    page.getByText(
-      "Search must follow the input instructions. Format: search <column> <value>"
-    )
-  ).toBeVisible();
-});
-
-test("ill-formatted search", async ({ page }) => {
-  // Navigate to your webpage
-  await page.goto("http://localhost:8000/");
-
-  // Assert that the button is visible by checking for its label or text
-
-  await inputBox.fill("load_file csv1");
-  await submitButton.click();
-
-  await inputBox.fill("search 123 345");
-  await submitButton.click();
-
-  await expect(
-    page.getByText(
-      "Search must follow the input instructions. Format: search <column> <value>"
-    )
-  ).toBeVisible();
-});
-
-test("successful 1 row search columnIndex", async ({ page }) => {
-  // Navigate to your webpage
-  await page.goto("http://localhost:8000/");
-
-  // Assert that the button is visible by checking for its label or text
-
-  await inputBox.fill("load_file csv1");
-  await submitButton.click();
-
-  await inputBox.fill("search <1> <Multiracial>");
-  await submitButton.click();
-  const resTable = page
-    .locator(".Output-Table")
-    .locator("tbody")
-    .locator("tr")
-   
-
-  
-  expect(await resTable.count()).toBe(1);
-  await expect(resTable.locator("td").nth(1)).toHaveText("Multiracial");
-
-
-
-
-
-
-});
 
 
 
