@@ -1,7 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-
-
 /**
  * this class tests the searching functionality, error messages, and successes
  */
@@ -15,13 +13,11 @@ test.beforeEach(async ({ page }) => {
   submitButton = page.locator("css=button");
 });
 
-
 /**
  * this tests that calling search without a CSV loaded will return a proper
- * error response message. 
+ * error response message.
  */
 test("no csv searching", async ({ page }) => {
-
   await page.goto("http://localhost:8000/");
 
   await inputBox.fill("search <1> <2>");
@@ -33,7 +29,7 @@ test("no csv searching", async ({ page }) => {
 });
 
 /**
- * this tests for searching a value that does not exist will return a proper 
+ * this tests for searching a value that does not exist will return a proper
  * message - "No Results Found!"
  */
 test("no results found search", async ({ page }) => {
@@ -49,13 +45,11 @@ test("no results found search", async ({ page }) => {
   await expect(page.getByText("No Results Found!")).toBeVisible();
 });
 
-
 /**
- * this tests an ill-formatted search. In this example, it tests that the 
- * carrots are not used for searching. 
+ * this tests an ill-formatted search. In this example, it tests that the
+ * carrots are not used for searching.
  */
 test("ill-formatted search no carrots", async ({ page }) => {
-
   await page.goto("http://localhost:8000/");
 
   await inputBox.fill("load_file csv1");
@@ -76,7 +70,6 @@ test("ill-formatted search no carrots", async ({ page }) => {
  * and that it returns a proper error message
  */
 test("ill-formatted search only one param", async ({ page }) => {
-
   await page.goto("http://localhost:8000/");
 
   await inputBox.fill("load_file csv1");
@@ -97,7 +90,6 @@ test("ill-formatted search only one param", async ({ page }) => {
  * and that it returns a proper error message
  */
 test("ill-formatted search no params", async ({ page }) => {
-
   await page.goto("http://localhost:8000/");
 
   await inputBox.fill("load_file csv1");
@@ -114,12 +106,11 @@ test("ill-formatted search no params", async ({ page }) => {
 });
 
 /**
- * This tests a successful search, with using a number as the column identifier, 
+ * This tests a successful search, with using a number as the column identifier,
  *  with only one row as a response, and that
- * a proper table is returned, with the search value existing in the response 
+ * a proper table is returned, with the search value existing in the response
  */
 test("csv1: successful 1 row search columnIndex ", async ({ page }) => {
-
   await page.goto("http://localhost:8000/");
 
   await inputBox.fill("load_file csv1");
@@ -134,7 +125,7 @@ test("csv1: successful 1 row search columnIndex ", async ({ page }) => {
 });
 
 /**
- * this tests a successful search with using a string as the column name, 
+ * this tests a successful search with using a string as the column name,
  * with only one row as a response (csv1)
  */
 test("csv1: successful 1 row search columnName ", async ({ page }) => {
@@ -153,7 +144,7 @@ test("csv1: successful 1 row search columnName ", async ({ page }) => {
 });
 
 /**
- * this tests a successful search with using a number as the column index, 
+ * this tests a successful search with using a number as the column index,
  * with only two rows as a response (csv3)
  */
 test("csv3: successful 2 row search columnIndex ", async ({ page }) => {
@@ -172,7 +163,7 @@ test("csv3: successful 2 row search columnIndex ", async ({ page }) => {
 });
 
 /**
- * this tests a successful search with using a string as the column name, 
+ * this tests a successful search with using a string as the column name,
  * with two rows as a response (csv3)
  */
 test("csv3: successful 2 row search columnName ", async ({ page }) => {
@@ -189,7 +180,6 @@ test("csv3: successful 2 row search columnName ", async ({ page }) => {
   await expect(resTable.nth(0).locator("td").nth(0)).toHaveText("Asian");
   await expect(resTable.nth(1).locator("td").nth(0)).toHaveText("Asian");
 });
-
 
 /**
  * this tests successful search with using number as column index
