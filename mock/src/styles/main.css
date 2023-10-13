@@ -30,11 +30,17 @@ button {
   display: block;
 }
 
+/**
+* Style for tables for view/search
+*/
 .Output-Table {
   table-layout: fixed;
   width: 100%;
 }
 
+/**
+* Style for datum in tables for view/search
+*/
 .Output-Datum {
   background-color: #96d4d4;
   border: 1px solid black;
