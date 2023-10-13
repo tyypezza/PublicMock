@@ -7,10 +7,10 @@ interface REPLHistoryProps {
   isBrief: boolean;
 }
 /**
- * This is the REPLHistory function that returns the maps all the things inside of 
- * the history into either a brief or verbose single history depending on the mode. 
- * @param props 
- * @returns 
+ * This is the REPLHistory function that returns the maps all the things inside of
+ * the history into either a brief or verbose single history depending on the mode.
+ * @param props
+ * @returns
  */
 export function REPLHistory(props: REPLHistoryProps) {
   if (props.isBrief) {

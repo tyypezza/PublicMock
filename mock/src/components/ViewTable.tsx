@@ -4,6 +4,12 @@ export interface ViewTableProps {
   history: [string, string[][]];
 }
 
+/**
+ * Function for creating a table for viewing a csv,
+ * or the rows returned from searching
+ * @param props history tuple
+ * @returns
+ */
 export function ViewTable(props: ViewTableProps) {
   const command: string = props.history[0];
   const output: string[][] = props.history[1];
